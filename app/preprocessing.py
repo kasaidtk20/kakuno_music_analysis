@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 
 from utils import save_pkl, read_pkl
 
+koushin
 
 print('----------------------------start')
 
