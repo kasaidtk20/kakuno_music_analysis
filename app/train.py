@@ -6,7 +6,6 @@ from keras.optimizers import RMSprop
 from keras.models import Model, Sequential
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from keras.utils import plot_model
-from keras.layers import Dense, Dropout, Activation, Flatten
 from sklearn.linear_model import LassoCV
 
 import params
@@ -38,8 +37,6 @@ rmsprop = RMSprop(lr=0.002, rho=0.9, epsilon=None, decay=0.0)
 #学習5
 def main():
 
-    model = Sequential()
-    model.add(Dropout(0.9))
     model: Model = DNNModel().build()
 
     model.compile(
@@ -50,7 +47,7 @@ def main():
     plot_model(model, to_file='model.pdf', show_shapes=True)
 
     callbacks = [
-        #EarlyStopping(patience=100),
+        EarlyStopping(patience=15),
         ModelCheckpoint(filepath=params.MODEL_FILE_PATH, save_best_only=True),
         TensorBoard(log_dir=params.LOG_DIR)]
 

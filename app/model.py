@@ -1,6 +1,7 @@
 import tensorflow as tf
 from keras.layers import Input, Dense
 from keras.models import Model
+from keras.layers import Dense, Dropout, Activation, Flatten
 
 import params  
 
@@ -21,6 +22,9 @@ class DNNModel:
             hidden7_size: int = params.HIDDEN7_SIZE,
             hidden8_size: int = params.HIDDEN8_SIZE,
             hidden9_size: int = params.HIDDEN9_SIZE,
+
+            dropout: int = params.DROPOUT,
+
             output_size: int = params.OUTPUT_SIZE) -> None:
         self.input: Input = Input(shape=(input_size,), name='input')
         self.hidden1: Dense = Dense(hidden1_size, activation='relu', name='hidden1')
@@ -32,12 +36,16 @@ class DNNModel:
         self.hidden7: Dense = Dense(hidden7_size, activation='relu', name='hidden7')
         self.hidden8: Dense = Dense(hidden8_size, activation='relu', name='hidden8')
         self.hidden9: Dense = Dense(hidden9_size, activation='relu', name='hidden9')
+        
+        self.dropout: Dropout = Dropout(dropout)
+
         self.output: Dense = Dense(output_size, name='output')
 
     def build(self) -> Model:
         input = self.input
         x = self.hidden1(input)
         x = self.hidden2(x)
+        x = self.dropout(x)
         x = self.hidden3(x)
         x = self.hidden4(x)
         x = self.hidden5(x)
