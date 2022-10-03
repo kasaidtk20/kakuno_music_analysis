@@ -1,9 +1,12 @@
 import pandas as pd
 from preprocessing import preprocess_dataset
 
-"""
+
 data_xy = pd.read_csv('../data_xy.csv', encoding = 'shift_jis')
 
+print(data_xy)
+
+"""
 imps = '0lig 1cla 2uph 3pas 4sad 5emo 6qui 7fea '
 imps = imps.split()  #目的変数y：印象要素(正解データ)
 i = 0  #i(0:8)を変えて複数回利用
