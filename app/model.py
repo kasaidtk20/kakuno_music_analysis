@@ -2,11 +2,12 @@ import tensorflow as tf
 from keras.layers import Input, Dense
 from keras.models import Model
 from keras.layers import Dense, Dropout, Activation, Flatten
+import numpy as np
 
 import params  
 
 
-print('----------------------------start')
+print('----------------------------start model')
 
 #機械学習モデルの定義
 class DNNModel:
@@ -44,17 +45,26 @@ class DNNModel:
     def build(self) -> Model:
         input = self.input
         x = self.hidden1(input)
+        x = self.dropout(x)
         x = self.hidden2(x)
         x = self.dropout(x)
         x = self.hidden3(x)
+        x = self.dropout(x)
         x = self.hidden4(x)
+        x = self.dropout(x)
         x = self.hidden5(x)
-        #x = self.hidden6(x)
-        #x = self.hidden7(x)
-        #x = self.hidden8(x)
+        x = self.dropout(x)
+        x = self.hidden6(x)
+        #x = self.dropout(x)
+        x = self.hidden7(x)
+        x = self.hidden8(x)
         #x = self.hidden9(x)
         output = self.output(x)
         return Model(inputs=input, outputs=output)
+
+#シグモイド関数
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
         
 
 print('------------------------------end')

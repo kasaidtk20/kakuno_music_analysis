@@ -32,9 +32,9 @@ train_label = pd.read_csv('../data_xy_train.csv',
 train_data = preprocess_dataset(train_data, is_training=True)
 
 #RMSprop
-rmsprop = RMSprop(lr=0.002, rho=0.9, epsilon=None, decay=0.0)
+rmsprop = RMSprop(lr=0.0016, rho=0.9, epsilon=None, decay=0.1)
 
-#学習5
+#学習
 def main():
 
     model: Model = DNNModel().build()
@@ -47,7 +47,7 @@ def main():
     plot_model(model, to_file='model.pdf', show_shapes=True)
 
     callbacks = [
-        EarlyStopping(patience=15),
+        EarlyStopping(patience=16),
         ModelCheckpoint(filepath=params.MODEL_FILE_PATH, save_best_only=True),
         TensorBoard(log_dir=params.LOG_DIR)]
 

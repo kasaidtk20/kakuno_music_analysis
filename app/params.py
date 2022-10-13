@@ -2,7 +2,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-print('----------------------------start')
+print('----------------------------start params')
 
 #印象要素読み込み
 imps = '0lig 1cla 2uph 3pas 4sad 5emo 6qui 7fea '
@@ -13,13 +13,13 @@ imp = imps[i]
 #モデル設計におけるパラメータ
 INPUT_SIZE = 7
 HIDDEN1_SIZE = 2048
-HIDDEN2_SIZE = 512
-HIDDEN3_SIZE = 128
-HIDDEN4_SIZE = 16
-HIDDEN5_SIZE = 4
+HIDDEN2_SIZE = 1024
+HIDDEN3_SIZE = 512
+HIDDEN4_SIZE = 256
+HIDDEN5_SIZE = 128
 HIDDEN6_SIZE = 64
 HIDDEN7_SIZE = 32
-HIDDEN8_SIZE = 16
+HIDDEN8_SIZE = 8
 HIDDEN9_SIZE = 4
 
 DROPOUT = 0.5

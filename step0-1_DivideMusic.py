@@ -139,6 +139,26 @@ new_filename: 結ンテ開イテ羅刹ト骸_trim.mp3 /// rand: 2
 (出力日時：2022/9/25/20:06)
 new_filename: 吉原ラメント_trim.mp3 /// rand: 4
 
+(出力日時：2022/10/12/15:03)
+new_filename: Sense_of_Happiness_trim.mp3 /// rand: 6
+new_filename: veil_trim.mp3 /// rand: 4
+new_filename: アイボリー_trim.mp3 /// rand: 1
+new_filename: インフェルノ_trim.mp3 /// rand: 7
+new_filename: ド屑_trim.mp3 /// rand: 7
+new_filename: ミライ_trim.mp3 /// rand: 5
+new_filename: ラヴラグ_trim.mp3 /// rand: 2
+new_filename: 大正浪漫_trim.mp3 /// rand: 6
+new_filename: 時の侭に_trim.mp3 /// rand: 2
+new_filename: 蜜蜂_trim.mp3 /// rand: 8
+new_filename: 閃光_trim.mp3 /// rand: 7
+
+(出力日時：2022/10/12/15:10)
+new_filename: 蜜蜂_trim.mp3 /// rand: 2
+
+(出力日時：2022/10/12/15:10)
+new_filename: インフェルノ_trim.mp3 /// rand: 4
+
+
 """
 
 
