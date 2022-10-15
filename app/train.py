@@ -6,21 +6,19 @@ from keras.optimizers import RMSprop
 from keras.models import Model, Sequential
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from keras.utils import plot_model
-from sklearn.linear_model import LassoCV
 
 import params
 from preprocessing import preprocess_dataset
 from model import DNNModel
 
 
-print('----------------------------start')
+print('----------------------------start train')
 
 
 #シード値固定
-SEED = 6
-tf.random.set_seed(SEED)
-random.seed(SEED)
-np.random.seed(SEED)
+tf.random.set_seed(params.SEED)
+random.seed(params.SEED)
+np.random.seed(params.SEED)
 
 #読み込み
 train_data = pd.read_csv('../data_xy_train.csv', 
@@ -32,7 +30,7 @@ train_label = pd.read_csv('../data_xy_train.csv',
 train_data = preprocess_dataset(train_data, is_training=True)
 
 #RMSprop
-rmsprop = RMSprop(lr=0.0016, rho=0.9, epsilon=None, decay=0.1)
+rmsprop = RMSprop(lr=params.LEARNING_RATE, rho=0.9, epsilon=None, decay=params.DECAY)
 
 #学習
 def main():
@@ -47,7 +45,7 @@ def main():
     plot_model(model, to_file='model.pdf', show_shapes=True)
 
     callbacks = [
-        EarlyStopping(patience=16),
+        EarlyStopping(patience=params.PATIENCE),
         ModelCheckpoint(filepath=params.MODEL_FILE_PATH, save_best_only=True),
         TensorBoard(log_dir=params.LOG_DIR)]
 
