@@ -54,7 +54,7 @@ class DNNModel:
         x = self.hidden5(x)
         x = self.dropout(x)
         x = self.hidden6(x)
-        x = self.dropout(x)
+        #x = self.dropout(x)
         x = self.hidden7(x)
         x = self.hidden8(x)
         #x = self.hidden9(x)

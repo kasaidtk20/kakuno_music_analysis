@@ -66,8 +66,8 @@ def imp_num(i):
     elif i==4:
         imp = imps[i]
         SEED = 1
-        LEARNING_RATE = 0.0008
-        DECAY = 0.1
+        LEARNING_RATE = 0.00081
+        DECAY = 0.06
         PATIENCE = 19
         DROPOUT = 0.6
         return imp, SEED, LEARNING_RATE, DECAY, PATIENCE, DROPOUT
@@ -75,14 +75,14 @@ def imp_num(i):
     #6qui
     elif i==6:
         imp = imps[i]
-        SEED = 1
-        LEARNING_RATE = 0.001
+        SEED = 2
+        LEARNING_RATE = 0.003
         DECAY = 0.0
-        PATIENCE = 20
+        PATIENCE = 11
         DROPOUT = 0.5
         return imp, SEED, LEARNING_RATE, DECAY, PATIENCE, DROPOUT
 
-i = 4  #i(0:8)を変えて複数回利用
+i = 6  #i(0:8)を変えて複数回利用
 imp_num(i)
 
 

@@ -85,10 +85,10 @@ if __name__ == '__main__':
     mae_tf = sum( abs( tp[params.imp] - tp['pred_tf'] ) ) / lentp
     mae_la = np.round(mae_la, 1)  #平均絶対誤差
     mae_tf = np.round(mae_tf, 1)  #平均絶対誤差
-    FINAL_PREDICT = min(mae_la, mae_tf)
+    final_predict = min(mae_la, mae_tf)
 
     print(f'result:\n {tp}')
-    print(f'mae_label: {mae_la} / mae_transform: {mae_tf}\nFINAL_PREDICT: {FINAL_PREDICT}')
+    print(f'mae_label: {mae_la} / mae_transform: {mae_tf}\nfinal_predict: {final_predict}')
 
 
 

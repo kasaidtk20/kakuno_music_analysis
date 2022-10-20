@@ -2,6 +2,7 @@ import tensorflow as tf
 import pandas as pd
 import numpy as np
 import random
+import pickle
 from keras.optimizers import RMSprop
 from keras.models import Model, Sequential
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
@@ -34,7 +35,7 @@ rmsprop = RMSprop(lr=params.LEARNING_RATE, rho=0.9, epsilon=None, decay=params.D
 
 #学習
 def main():
-
+    
     model: Model = DNNModel().build()
 
     model.compile(
@@ -58,10 +59,12 @@ def main():
         callbacks=callbacks,
         initial_epoch=0)
     
-
 if __name__ == '__main__':
     main()
 
+# #モデル保存
+# with open('../modeled/model_6qui.pickle', mode='wb') as f:
+#     pickle.dump(main, f)
 
 
 print('------------------------------end')
