@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from utils import save_pkl, read_pkl
 
 
-print('----------------------------start')
+print('----------------------------preprocessing start')
 
 def preprocess_dataset(data_xy, is_training: bool):
     if is_training:
@@ -25,4 +25,4 @@ def preprocess_dataset(data_xy, is_training: bool):
     #訓練とテストの分割(8:2)
     #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-print('------------------------------end')
+print('------------------------------preprocessing end')
