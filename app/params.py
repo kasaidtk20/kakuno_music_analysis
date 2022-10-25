@@ -98,8 +98,8 @@ def imp_num(i):
         pass
 
 
-i = 6  #i(0:8)を変えて複数回利用
-imp_num(i)
+# i = 6  #i(0:8)を変えて複数回利用
+# imp_num(i)
 
 
 print('------------------------------params end')

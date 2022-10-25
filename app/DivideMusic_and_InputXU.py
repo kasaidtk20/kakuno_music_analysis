@@ -78,4 +78,4 @@ for i in range(8):
     # os.remove(musicname)
 
 
-print('----------------------------divide-inputx start')
+print('----------------------------divide-inputx end')

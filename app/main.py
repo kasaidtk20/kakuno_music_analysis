@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 
 from background import *
+from predictU import predictU_main
+
+
+
 
 
 #オブジェクト
@@ -28,6 +32,7 @@ class SceneManager():
             self.callbutton = Wait(self.m_wid)
             
             # time.sleep(3)
+            # predictU_main()
             self.callbutton.finalize()
             # time.sleep(3)
             self.callbutton = Result(self.m_wid, changescene_end)
@@ -35,31 +40,37 @@ class SceneManager():
         def changescene_end():
             self.callbutton.finalize()
 
-            self.callbutton = Title(self.m_wid, changescene_start, changescene_his)
+            self.callbutton = Title(self.m_wid, changescene_start, changescene_his, changescene_info)
 
 
 
 
 
-    #-------------------------------------TITLE→HISTORY
+        #-------------------------------------TITLE→HISTORY
 
 
         #TITLE画面で履歴ボタンが押されたときに呼び出される関数
         def changescene_his():
             self.callbutton.finalize()
 
-            self.callbutton = His(self.m_wid, changescene_back)
+            self.callbutton = His(self.m_wid, changescene_end)
 
-        def changescene_back():
+
+        #-------------------------------------TITLE→INFO
+
+        #TITLE画面でツール情報ボタンが押されたときに呼び出される関数
+        def changescene_info():
             self.callbutton.finalize()
 
-            self.callbutton = Title(self.m_wid, changescene_start, changescene_his)
-
-
+            self.callbutton = Info(self.m_wid, changescene_end)
 
 
         #ボタンなどを画面に表示する実体
-        self.callbutton = Title(self.m_wid, changescene_start, changescene_his)
+        self.callbutton = Title(self.m_wid, changescene_start, changescene_his, changescene_info)
+
+
+
+
 
 print('----------------------------main start')
 
