@@ -4,9 +4,11 @@ import librosa
 from scipy.signal import argrelmax
 
 import paramsU
+import background
 
 
 print('----------------------------bpmU start')
+
 
 
 #music読み込み

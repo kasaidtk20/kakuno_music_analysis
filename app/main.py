@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 
 from background import *
 from predictU import predictU_main
@@ -15,6 +14,7 @@ class SceneManager():
 
         #-------------------------------------TITLE→START
         
+
         #TITLE画面ではじめるボタンが押されたときに呼び出される関数
         def changescene_start():
             self.callbutton.finalize()
@@ -28,15 +28,15 @@ class SceneManager():
 
         def changescene_Uselected():  #とちゅううううううううううううううううううううううううううううううううううううううう
             self.callbutton.finalize()
-            # time.sleep(3)
-            self.callbutton = Wait(self.m_wid)
             
-            # time.sleep(3)
-            # predictU_main()
+            self.callbutton = Wait(self.m_wid, changescene_waitto)
+
+        def changescene_waitto():
             self.callbutton.finalize()
-            # time.sleep(3)
+            
             self.callbutton = Result(self.m_wid, changescene_end)
 
+        
         def changescene_end():
             self.callbutton.finalize()
 
@@ -80,11 +80,12 @@ root.geometry('1920x1080+0+0')
 root.title('たいとる')
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=1)
+root.configure(bg="yellow")
 
 #SceneManagerの実体作成
 sm = SceneManager(root)
 
 root.mainloop()
-
+    
 
 print('----------------------------main end')
