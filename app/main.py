@@ -1,7 +1,7 @@
 import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from background import *
-from predictU import predictU_main
 
 
 
@@ -26,21 +26,26 @@ class SceneManager():
 
             self.callbutton = SearchMusic(self.m_wid, changescene_Uselected)
 
-        def changescene_Uselected():  #とちゅううううううううううううううううううううううううううううううううううううううう
+        def changescene_Uselected():
             self.callbutton.finalize()
             
             self.callbutton = Wait(self.m_wid, changescene_waitto)
-
+            
         def changescene_waitto():
             self.callbutton.finalize()
-            
+
             self.callbutton = Result(self.m_wid, changescene_end)
 
+            # canvas = FigureCanvasTkAgg(RaderChart_show(), master=root)
+            # canvas.get_tk_widget()
+            # canvas.place(x = 300, y = 100)
+            # canvas.mainloop()
         
         def changescene_end():
             self.callbutton.finalize()
 
             self.callbutton = Title(self.m_wid, changescene_start, changescene_his, changescene_info)
+
 
 
 
@@ -53,16 +58,21 @@ class SceneManager():
         def changescene_his():
             self.callbutton.finalize()
 
-            self.callbutton = His(self.m_wid, changescene_end)
+            self.callbutton = His(self.m_wid, changescene_back)
+
+        def changescene_back():
+            self.callbutton.finalize()
+
+            self.callbutton = Title(self.m_wid, changescene_start, changescene_his, changescene_info)
 
 
         #-------------------------------------TITLE→INFO
 
-        #TITLE画面でツール情報ボタンが押されたときに呼び出される関数
+        #TITLE画面で作成情報ボタンが押されたときに呼び出される関数
         def changescene_info():
             self.callbutton.finalize()
 
-            self.callbutton = Info(self.m_wid, changescene_end)
+            self.callbutton = Info(self.m_wid, changescene_back)
 
 
         #ボタンなどを画面に表示する実体
@@ -76,10 +86,8 @@ print('----------------------------main start')
 
 #ウィンドウ実体化
 root = tk.Tk()
-root.geometry('1920x1080+0+0')
-root.title('たいとる')
-root.grid_rowconfigure(0, weight=1)
-root.grid_columnconfigure(0, weight=1)
+root.geometry('1520x940+0+0')
+root.title('音楽の印象分析ツール')
 root.configure(bg="yellow")
 
 #SceneManagerの実体作成

@@ -67,7 +67,7 @@ def imp_num(i):
         DECAY = 0.0
         PATIENCE = 10
         DROPOUT = 0.8
-        LABEL = 7 #pred_label
+        LABEL = 8 #pred_tf
         return MODEL_FILE_PATH, imp, SEED, LEARNING_RATE, DECAY, PATIENCE, DROPOUT,LABEL
 
     #4sad
