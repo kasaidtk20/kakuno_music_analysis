@@ -12,7 +12,7 @@ from DivideMusic_and_InputXU import DivideMusic
 from DivideMusic_and_InputXU import Inputx
 from predictU import predictU_main
 from paramsU import NameReplace
-from raderchart import RaderChart
+from raderchart import *
 
 
 
@@ -42,9 +42,9 @@ class Title():
         #オブジェクト配置
         self.title.place(x = 350, y = 240)
         self.vi1.place(x = 675, y = 350)
-        self.buttonSTART.place(x = 650, y = 560)
-        self.buttonHISTORY.place(x = 655, y = 660)
-        self.buttonINFO.place(x = 650, y = 760)
+        self.buttonSTART.place(x = 655, y = 560)
+        self.buttonHISTORY.place(x = 660, y = 660)
+        self.buttonINFO.place(x = 655, y = 760)
 
     #シーン切り替えの際にTITLE画面からボタンを消す
     def finalize(self):
@@ -57,9 +57,10 @@ class Title():
 #-------------------------------------HOWTO
 
 class Howto():
-    def __init__(self, main_widget, OK):
+    def __init__(self, main_widget, OK, BACKTITLE):
         self.m_wid = main_widget
         self.ok = OK
+        self.backtitle = BACKTITLE
 
 
         #オブジェクト中身
@@ -67,7 +68,7 @@ class Howto():
                         '\n' +  \
                         '②選択できる曲は、YouTubeに正規アップロードされているものに限ります。\n' +  \
                         '\n' +  \
-                        '③ツールは、音楽に対して使うことを推奨しますが、どんな音声に対しても一応の数値を出すことはできます。\n' +  \
+                        '③本ツールは音楽に対して使うことを推奨しますが、どんな音声に対しても一応の数値を出すことはできます。\n' +  \
                         '\n' +  \
                         '④使用をやめるときは、「タイトルに戻る」ボタンを押してタイトル画面に戻してください。'
         self.headline = tk.Label(text='使い方', font=('', '40', 'bold'), foreground='black')
@@ -92,9 +93,10 @@ class Howto():
 #-------------------------------------SEARTCH_MUSIC(仮)
 
 class SearchMusic():
-    def __init__(self, main_widget, U_SELECTED):
+    def __init__(self, main_widget, U_SELECTED, BACKTITLE):
         self.m_wid = main_widget
         self.Uselected = U_SELECTED
+        self.backtitle = BACKTITLE
 
 
         #オブジェクト中身
@@ -165,9 +167,10 @@ class Wait():
 #-------------------------------------RESULT(仮)
 
 class Result():
-    def __init__(self, main_widget, END):
+    def __init__(self, main_widget, RC0, END):
         self.m_wid = main_widget
         self.end = END
+        self.rc0 = RC0
         Umusicindex = getUmusic()
         read_csv(Umusicindex)
         global impsdf
@@ -183,10 +186,12 @@ class Result():
         self.imps_2 = tk.Label(text=index_2, font=('', '20'), fg='black', justify='right')
         self.imps_4 = tk.Label(text=index_4, font=('', '20'), fg='black', justify='right')
         self.imps_6 = tk.Label(text=index_6, font=('', '20'), fg='black', justify='right')
+        self.rc0 = tk.Button(self.m_wid, text = '◀', font=('', '20'), command=self.rc0)
         self.end = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.end)
 
         #オブジェクト配置
         ix, iy = 450, 400
+        rcx, rcy = 800, 300
         self.headline.place(x = 200, y = 150)
         self.description.place(x = 650, y = 300)
         self.bpm.place(x = 300, y = 300)
@@ -196,10 +201,11 @@ class Result():
         self.imps_2.place(x = ix+140, y = iy)
         self.imps_4.place(x = ix+210, y = iy)
         self.imps_6.place(x = ix+280, y = iy)
+        self.rc0.place(x = rcx, y = rcy)
         self.end.place(x = 50, y = 50)
 
         #確認用
-        print(RaderChart(impsdf))
+        # print(RaderChart(impsdf))
 
         
 
@@ -214,6 +220,7 @@ class Result():
         self.imps_2.destroy()
         self.imps_4.destroy()
         self.imps_6.destroy()
+        self.rc0.destroy()
         self.end.destroy()
 
 #
@@ -255,7 +262,7 @@ class Info():
                         '\n' +  \
                         '・YouTube動画から音楽をダウンロードするときの使用ウェブサイト\n' +  \
                         '→y2mate.com \n'
-        self.headline = tk.Label(text='備考', font=('', '40', 'bold'), foreground='black')
+        self.headline = tk.Label(text='作成情報', font=('', '40', 'bold'), foreground='black')
         self.description = tk.Label(text=description, font=('', '25'), foreground='black', justify='left', wraplength=1250)
         self.backtitle = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.backtitle)
 

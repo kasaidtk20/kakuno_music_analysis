@@ -19,12 +19,12 @@ class SceneManager():
         def changescene_start():
             self.callbutton.finalize()
 
-            self.callbutton = Howto(self.m_wid, changescene_ok)
+            self.callbutton = Howto(self.m_wid, changescene_ok, changescene_back)
             
         def changescene_ok():
             self.callbutton.finalize()
 
-            self.callbutton = SearchMusic(self.m_wid, changescene_Uselected)
+            self.callbutton = SearchMusic(self.m_wid, changescene_Uselected, changescene_back)
 
         def changescene_Uselected():
             self.callbutton.finalize()
@@ -34,15 +34,23 @@ class SceneManager():
         def changescene_waitto():
             self.callbutton.finalize()
 
-            self.callbutton = Result(self.m_wid, changescene_end)
+            self.canvas = FigureCanvasTkAgg(RaderChart(impsdf), master=root)
+            self.canvas.draw()
+            self.canvas.get_tk_widget().place(x = 600, y = 100)
 
-            # canvas = FigureCanvasTkAgg(RaderChart_show(), master=root)
-            # canvas.get_tk_widget()
-            # canvas.place(x = 300, y = 100)
-            # canvas.mainloop()
+            self.callbutton = Result(self.m_wid, to_rc0, changescene_end)
+
+        def to_rc0():
+            canvas0 = FigureCanvasTkAgg(RaderChart0(impsdf), master=root)
+            canvas0.draw()
+            canvas0.get_tk_widget().place(x = 600, y = 100)
+
+            self.callbutton = Result(self.m_wid, to_rc0, changescene_end)
+
         
         def changescene_end():
             self.callbutton.finalize()
+            self.canvas0.destroy()
 
             self.callbutton = Title(self.m_wid, changescene_start, changescene_his, changescene_info)
 
