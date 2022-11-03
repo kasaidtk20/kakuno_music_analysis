@@ -49,9 +49,9 @@ def DivideMusic(path, mp3name):
 def Inputx(mp3name):
 
     #ユーザー行をリセットする
-    prex = pd.read_csv('../csv/data_preset_x.csv', encoding = 'utf-8')
+    prex = pd.read_csv('../csv/data_preset_x.csv', encoding = 'utf-8-sig')
     prex = prex.head(16)
-    prex.to_csv('../csv/data_preset_x.csv', encoding = 'utf-8', index=False)
+    prex.to_csv('../csv/data_preset_x.csv', encoding = 'utf-8-sig', index=False)
 
     #Xの調達
     for i in range(8):

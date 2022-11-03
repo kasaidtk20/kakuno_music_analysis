@@ -58,6 +58,8 @@ def predictU_main():
         def transform(tp):
             max = pred.max()
             min = pred.min()
+            # max2 = sorted(set(pred))[-5]
+            # min2 = pred.min()
             tf = (tp[f'{params.imp}'] - min) / (max - min) * 74 + 13
             return tf
         #実行
@@ -70,7 +72,7 @@ def predictU_main():
         #predかpred_tfを選び、test_dataのデータフレームにいずれかの列を追加
         if params.LABEL==7:  #pred_label
             pass
-        else:  #pred_tf
+        elif params.LABEL==8:  #pred_tf
             tp[f'{params.imp}'] = pred_tf
 
 
@@ -81,13 +83,13 @@ def predictU_main():
         Upreds['filename'] = filename[16:24].reset_index(drop=True)
         Upreds[f'{params.imp}'] = Upred.reset_index(drop=True)
 
+    #書き出し
     Upreds_out = Upreds.head(8)
     Upreds_out.to_csv('../csv/Ulog.csv', encoding = 'utf-8', index=False, mode='a', header=False)
 
 
     #確認用
-    # print(Upreds_out)
-
+    print(Upreds_out)
 
     return Upreds_out
 

@@ -26,7 +26,7 @@ def WhatNewFile():
 #ファイル名のスペースを置換
 def NameReplace(user_music_pre):
     if ' ' in user_music_pre:
-        user_music = user_music_pre.replace(' ', '_')
+        user_music = user_music_pre.replace(' ', '_').replace('/', '_')
         if os.path.isfile(f'../dataU/{user_music_pre}.mp3')==True:
             if os.path.isfile(f'../dataU/{user_music}.mp3')==False:
                 os.rename(f'../dataU/{user_music_pre}.mp3', f'../dataU/{user_music}.mp3')

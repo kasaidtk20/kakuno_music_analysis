@@ -2,8 +2,8 @@ import tkinter as tk
 import pandas as pd
 import librosa
 import numpy as np
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PIL import Image, ImageTk
+import subprocess
 
 from musicDL.webcommand import Web
 from musicDL.mp4_mp3 import mp4_mp3
@@ -28,28 +28,35 @@ class Title():
         self.start = START
         self.history = HISTORY
         self.info = INFO
+
         openvi1 = Image.open('visual1.png').resize((141,151))
         self.imavi1 = ImageTk.PhotoImage(openvi1)
+        openvi0 = Image.open('visual0.png').resize((600, 50))
+        self.imavi0 = ImageTk.PhotoImage(openvi0)
 
     
         #オブジェクト中身
-        self.title = tk.Label(text='音楽の印象分析ツール', font=('', '60', 'bold'), foreground='black')
+        self.title = tk.Label(text='音楽の印象分析ツール', font=('Rounded Mplus 1c Bold', 60, 'bold'), foreground='black')
         self.vi1 = tk.Label(self.m_wid, image=self.imavi1)
+        self.vi0 = tk.Label(self.m_wid, image=self.imavi0)
         self.buttonSTART = tk.Button(self.m_wid, text = ' はじめる ', font=('', '30'), command=self.start)
-        self.buttonHISTORY = tk.Button(self.m_wid, text = '   履歴   ', font=('', '30'), command=self.history)
+        self.buttonHISTORY = tk.Button(self.m_wid, text = '前の結果', font=('', '30'), command=self.history)
         self.buttonINFO = tk.Button(self.m_wid, text='作成情報', font=('', '30'), command=self.info)
 
         #オブジェクト配置
         self.title.place(x = 350, y = 240)
         self.vi1.place(x = 675, y = 350)
+        self.vi0.place(x = 460, y = 180)
+        # self.buttonSTART.place(x = 655, y = 660)
         self.buttonSTART.place(x = 655, y = 560)
-        self.buttonHISTORY.place(x = 660, y = 660)
+        self.buttonHISTORY.place(x = 655, y = 660)
         self.buttonINFO.place(x = 655, y = 760)
 
     #シーン切り替えの際にTITLE画面からボタンを消す
     def finalize(self):
         self.title.destroy()
         self.vi1.destroy()
+        self.vi0.destroy()
         self.buttonSTART.destroy()
         self.buttonHISTORY.destroy()
         self.buttonINFO.destroy()
@@ -64,21 +71,24 @@ class Howto():
 
 
         #オブジェクト中身
-        description =   '①YouTubeにアップされている動画から好きな曲を選んでください。そのときに、動画の作成に関わらない者からアップロードされた動画(違法アップロード動画)の選択を避けてください。\n' +  \
+        description =   '①このツールは、機械学習を使って、音楽のBPMや、音楽から受ける印象をスコアとして算出してくれるツールです。\n' +  \
                         '\n' +  \
-                        '②選択できる曲は、YouTubeに正規アップロードされているものに限ります。\n' +  \
+                        '②「OK」ボタンを押したら、YouTubeにアップロードされている曲の中から好きな曲を選んでください。\n' +  \
                         '\n' +  \
-                        '③本ツールは音楽に対して使うことを推奨しますが、どんな音声に対しても一応の数値を出すことはできます。\n' +  \
-                        '\n' +  \
-                        '④使用をやめるときは、「タイトルに戻る」ボタンを押してタイトル画面に戻してください。'
-        self.headline = tk.Label(text='使い方', font=('', '40', 'bold'), foreground='black')
-        self.description = tk.Label(text=description, font=('', '25'), foreground='black', justify='left', wraplength=1200)
+                        '③使用をやめるときは、「タイトルに戻る」ボタンを押してタイトル画面に戻してください。'
+        note1 = '※ツールは音楽に対して使うことを推奨しますが、基本どんな音声に対しても機能します。\n' +  \
+                '\n' +  \
+                '※動画の作成に関わらない者からアップロードされた動画(違法アップロード動画)の選択を避けてください。\n'
+        self.headline = tk.Label(text='使用について', font=('', '40', 'bold'), foreground='black')
+        self.description = tk.Label(text=description, font=('', '25'), foreground='black', justify='left', wraplength=800)
+        self.note1 = tk.Label(text=note1, font=('', '15'), foreground='black', justify='left', wraplength=800)
         self.ok = tk.Button(self.m_wid, text = 'OK', font=('', '30'), command=self.ok)
         self.backtitle = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.backtitle)
 
         #オブジェクト配置
         self.headline.place(x = 150, y = 150)
-        self.description.place(x = 150, y = 300)
+        self.description.place(x = 175, y = 300)
+        self.note1.place(x = 175, y = 600)
         self.ok.place(x = 730, y = 800)
         self.backtitle.place(x = 50, y = 50)
 
@@ -87,10 +97,11 @@ class Howto():
     def finalize(self):
         self.headline.destroy()
         self.description.destroy()
+        self.note1.destroy()
         self.ok.destroy()
         self.backtitle.destroy()
 
-#-------------------------------------SEARTCH_MUSIC(仮)
+#-------------------------------------SEARTCH_MUSIC
 
 class SearchMusic():
     def __init__(self, main_widget, U_SELECTED, BACKTITLE):
@@ -98,20 +109,33 @@ class SearchMusic():
         self.Uselected = U_SELECTED
         self.backtitle = BACKTITLE
 
+        openvi1 = Image.open('visual1.png').resize((269,288)).transpose(Image.ROTATE_180)
+        self.imavi1 = ImageTk.PhotoImage(openvi1)
+        openvi3 = Image.open('visual3.png').resize((168,121))
+        self.imavi3 = ImageTk.PhotoImage(openvi3)
+
 
         #オブジェクト中身
-        self.headline = tk.Label(text='←ウェブから分析したい曲を選んでください', font=('', '30', 'bold'), foreground='black', justify='left', wraplength=400)
-        self.description = tk.Label(text='曲が決まったら「この曲にシマス」を押してください\n※画面が切り替わるまで1分程度お待ちください', font=('', '20'), foreground='black', justify='left', wraplength=380)
+        description =   'ウェブページ上側の検索ボックスから、分析したい曲を探してください。そしてかならず動画の再生画面にしてから「この曲にシマス」ボタンを押してください。\n' +  \
+                        '\n' +  \
+                        '※画面が切り替わるまで1～2分程度お待ちください。\n' +  \
+                        '※フリーズしても操作せず、足の裏のシワを見てお待ちくだされ。'
+        self.vi1 = tk.Label(self.m_wid, image=self.imavi1)
+        self.vi3 = tk.Label(self.m_wid, image=self.imavi3)
+        self.headline = tk.Label(text='←YouTubeから分析したい曲を選んでください。', font=('', '30', 'bold'), foreground='black', justify='left', wraplength=400)
+        self.description = tk.Label(text=description, font=('', '20'), foreground='black', justify='left', wraplength=380)
         self.Uselected = tk.Button(self.m_wid, text = 'この曲にシマス', font=('', '30'), command=self.Uselected)
-        self.backtitle = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.backtitle)
+        # self.backtitle = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.backtitle)
 
         #オブジェクト配置
+        self.vi1.place(x = 415, y = 350)
+        self.vi3.place(x = 270, y = 240)
         self.headline.place(x = 1100, y = 200)
-        self.description.place(x = 1100, y = 600)        
+        self.description.place(x = 1100, y = 440)        
         self.Uselected.place(x = 1100, y = 750)
-        self.backtitle.place(x = 50, y = 50)
+        # self.backtitle.place(x = 50, y = 50)
 
-        #曲選択&DL
+        #曲選択
         global web
         web = Web()
         
@@ -119,29 +143,35 @@ class SearchMusic():
     #シーン切り替えの際にSEARCH_MUSIC画面からボタンなどを消す
     def finalize(self):
         web.quit()
-
+        
+        self.vi1.destroy()
+        self.vi3.destroy()
         self.headline.destroy()
         self.description.destroy()
+        # self.backtitle.destroy()
         self.Uselected.destroy()
-        self.backtitle.destroy()
 
-#-------------------------------------WAIT(仮)
+#-------------------------------------WAIT
 
 class Wait():
     def __init__(self, main_widget, WAITTO):
         self.m_wid = main_widget
         self.waitto = WAITTO
 
+        openvi1 = Image.open('visual1.png').resize((101,108))
+        self.imavi1 = ImageTk.PhotoImage(openvi1)
+
         #曲DL
         global mp3name, path, tempo
         web.download()
         mp3 = mp4_mp3()
         mp3.all('../dataU')
-        print(mp3.name)
+        print(f'mp3.name: {mp3.name}')
         #mp3name=相対パスと拡張子なし、path=相対パスと拡張子込み
         mp3name = NameReplace(mp3.name)
         path = mp3.path_name
-        print(f'mp3name:{mp3name}')
+        print(f'mp3name:  {mp3name}')
+        print(f'path: {path}')
 
         #テンポ取得
         tempo = bpmU()
@@ -155,53 +185,98 @@ class Wait():
         predictU_main()
         print('印象分析完了')
 
+        #結果の実体
+        Umusicindex = getUmusic()
+        print(f'Umusicindex:{Umusicindex}')
+        read_csv(Umusicindex)
+        global impsdf_true
+        impsdf_true = create_Udf(Umusicindex)
+
         #分析完了
         self.waitto = tk.Button(self.m_wid, text = '結果を見る', font=('', '30'), command=self.waitto)
-        self.waitto.place(x = 1000, y = 750)
+        self.vi1 = tk.Label(self.m_wid, image=self.imavi1)
+        
+        self.waitto.place(x = 1000, y = 670)
+        self.vi1.place(x = 1060, y = 750)
 
 
     #シーン切り替えの際にWAIT画面からボタンを消す
     def finalize(self):
+        self.vi1.destroy()
         self.waitto.destroy()
 
-#-------------------------------------RESULT(仮)
+#-------------------------------------RESULT
 
 class Result():
-    def __init__(self, main_widget, RC0, END):
+    def __init__(self, main_widget, PLAYF, PLAY0, PLAY1, PLAY2, PLAY3, PLAY4, PLAY5, PLAY6, PLAY7, RCLEFT, RCRIGHT, END):
         self.m_wid = main_widget
         self.end = END
-        self.rc0 = RC0
-        Umusicindex = getUmusic()
-        read_csv(Umusicindex)
-        global impsdf
-        impsdf = create_Udf(Umusicindex)
+        self.playf = PLAYF
+        self.play0 = PLAY0
+        self.play1 = PLAY1
+        self.play2 = PLAY2
+        self.play3 = PLAY3
+        self.play4 = PLAY4
+        self.play5 = PLAY5
+        self.play6 = PLAY6
+        self.play7 = PLAY7
+        self.rcl = RCLEFT
+        self.rcr = RCRIGHT
+
+        clrli = ['crimson', 'sandybrown', 'gold', 'aquamarine', 'skyblue', 'steelblue', 'mediumpurple', 'hotpink']
+
 
         #オブジェクト中身
         self.headline = tk.Label(text='結果', font=('', '40', 'bold'), foreground='black')
-        self.description = tk.Label(text='結果だよ', font=('', '30'), foreground='black')
-        self.bpm = tk.Label(text=f'BPM: {tempo}', font=('', '30'), fg='black', justify='right')
-        self.imps_m = tk.Label(text=index_m, font=('', '20'), fg='black', justify='right')
-        self.imps_0 = tk.Label(text=index_0, font=('', '20'), fg='black', justify='right')
-        self.imps_1 = tk.Label(text=index_1, font=('', '20'), fg='black', justify='right')
-        self.imps_2 = tk.Label(text=index_2, font=('', '20'), fg='black', justify='right')
-        self.imps_4 = tk.Label(text=index_4, font=('', '20'), fg='black', justify='right')
-        self.imps_6 = tk.Label(text=index_6, font=('', '20'), fg='black', justify='right')
-        self.rc0 = tk.Button(self.m_wid, text = '◀', font=('', '20'), command=self.rc0)
+        self.musicname = tk.Label(text=f'🎵タイトル：{mp3name}', font=('', '35'), foreground='black', justify='left', wraplength=650)
+        self.bpm = tk.Label(text=f'BPM：{tempo}', font=('', '40'), fg='black', justify='right')
+        self.playf = tk.Button(self.m_wid, text = '全再生', font=('', '13', 'bold'), foreground='black', command=self.playf)
+        self.play0 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[0]}', command=self.play0)
+        self.play1 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[1]}', command=self.play1)
+        self.play2 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[2]}', command=self.play2)
+        self.play3 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[3]}', command=self.play3)
+        self.play4 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[4]}', command=self.play4)
+        self.play5 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[5]}', command=self.play5)
+        self.play6 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[6]}', command=self.play6)
+        self.play7 = tk.Button(self.m_wid, text = '再生', font=('', '13', 'bold'), foreground=f'{clrli[7]}', command=self.play7)
+        self.imps_m = tk.Label(text=index_m, font=('', '25'), fg='black', justify='right')
+        self.imps_0 = tk.Label(text=index_0, font=('', '25'), fg='black', justify='right')
+        self.imps_1 = tk.Label(text=index_1, font=('', '25'), fg='black', justify='right')
+        self.imps_2 = tk.Label(text=index_2, font=('', '25'), fg='black', justify='right')
+        self.imps_4 = tk.Label(text=index_4, font=('', '25'), fg='black', justify='right')
+        self.imps_6 = tk.Label(text=index_6, font=('', '25'), fg='black', justify='right')
+        self.rcl = tk.Button(self.m_wid, text = '◀', font=('', '25'), command=self.rcl)
+        self.rcr = tk.Button(self.m_wid, text = '▶', font=('', '25'), command=self.rcr)
+        self.note1 = tk.Label(text='※音声は8分割されています。音楽から受けた印象は、分割範囲ごとに数値化されています！\n  各「再生」ボタンを押すと、グラフと音声が対応します。', font=('', '15'), fg='black', justify='left')
+        self.note2 = tk.Label(text='↑範囲ごとの結果を見よう！(音声は対応しません。)', font=('', '15'), fg='black', justify='center')
         self.end = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.end)
 
         #オブジェクト配置
-        ix, iy = 450, 400
-        rcx, rcy = 800, 300
+        px, py, pdif= 120, 536, 33
+        ix, iy = 510, 500
+        rcx, rcy = 1105, 720
         self.headline.place(x = 200, y = 150)
-        self.description.place(x = 650, y = 300)
-        self.bpm.place(x = 300, y = 300)
-        self.imps_m.place(x = ix-250, y = iy)
+        self.musicname.place(x = 200, y = 250)
+        self.bpm.place(x = 200, y = 420)
+        self.playf.place(x = px, y = py-pdif)
+        self.play0.place(x = px, y = py)
+        self.play1.place(x = px, y = py+pdif)
+        self.play2.place(x = px, y = py+2*pdif)
+        self.play3.place(x = px, y = py+3*pdif)
+        self.play4.place(x = px, y = py+4*pdif)
+        self.play5.place(x = px, y = py+5*pdif)
+        self.play6.place(x = px, y = py+6*pdif)
+        self.play7.place(x = px, y = py+7*pdif)
+        self.imps_m.place(x = ix-310, y = iy)
         self.imps_0.place(x = ix, y = iy)
-        self.imps_1.place(x = ix+70, y = iy)
-        self.imps_2.place(x = ix+140, y = iy)
-        self.imps_4.place(x = ix+210, y = iy)
-        self.imps_6.place(x = ix+280, y = iy)
-        self.rc0.place(x = rcx, y = rcy)
+        self.imps_1.place(x = ix+60, y = iy)
+        self.imps_2.place(x = ix+120, y = iy)
+        self.imps_4.place(x = ix+180, y = iy)
+        self.imps_6.place(x = ix+240, y = iy)
+        self.rcl.place(x = rcx, y = rcy)
+        self.rcr.place(x = rcx+50, y = rcy)
+        self.note1.place(x = 150, y = 810)
+        self.note2.place(x = 1035, y = 790)
         self.end.place(x = 50, y = 50)
 
         #確認用
@@ -212,19 +287,31 @@ class Result():
     #シーン切り替えの際にRESULT画面からボタンを消す
     def finalize(self):
         self.headline.destroy()
-        self.description.destroy()
+        self.musicname.destroy()
         self.bpm.destroy()
+        self.playf.destroy()
+        self.play0.destroy()
+        self.play1.destroy()
+        self.play2.destroy()
+        self.play3.destroy()
+        self.play4.destroy()
+        self.play5.destroy()
+        self.play6.destroy()
+        self.play7.destroy()
         self.imps_m.destroy()
         self.imps_0.destroy()
         self.imps_1.destroy()
         self.imps_2.destroy()
         self.imps_4.destroy()
         self.imps_6.destroy()
-        self.rc0.destroy()
+        self.rcl.destroy()
+        self.rcr.destroy()
+        self.note1.destroy()
+        self.note2.destroy()
         self.end.destroy()
 
 #
-#-------------------------------------HISTORY
+#-------------------------------------HISTORY(非表示)
 
 class His():
     def __init__(self, main_widget, BACKTITLE):
@@ -247,6 +334,11 @@ class His():
         self.backtitle.destroy()
 
 #
+#-------------------------------------RESULT_SAVE
+# class ResultSave():
+
+
+#
 #-------------------------------------INFO
 
 class Info():
@@ -256,19 +348,26 @@ class Info():
 
 
         #オブジェクト中身
-        description =   '・音楽の利用に関して守っていること\n' +  \
-                        '→参照：文化庁HPより著作権法について(第38,47-3,47-7,47-8条)\n' +  \
-                        '→https://www.bunka.go.jp/seisaku/chosakuken/seidokaisetsu/gaiyo/chosakubutsu_jiyu.html \n' +  \
+        description =   '・このツールに興味を持ってくれてありがとう！！\n' +  \
                         '\n' +  \
-                        '・YouTube動画から音楽をダウンロードするときの使用ウェブサイト\n' +  \
-                        '→y2mate.com \n'
+                        '・作成者：関西大学システム理工学部電気電子情報工学科1回生 角野真弓\n' +  \
+                        '・指導者：関西大学システム理工学部電気電子情報工学科3回生 大家慧士\n' +  \
+                        '・制作期間：2022年9月下旬～同年11月上旬\n' +  \
+                        '・制作環境：Windows11のPython 3.10.5のtkinterとかmatplotlibとかpandasとか\n' +  \
+                        '・音楽の利用に関して守っていること\n' +  \
+                        '→参照：文化庁HPより 著作権法について(第38,47-3,47-7,47-8条)\n' +  \
+                        '→https://www.bunka.go.jp/seisaku/chosakuken/seidokaisetsu/gaiyo/chosakubutsu_jiyu.html \n' +  \
+                        '・使用画像\n' +  \
+                        '→https://www.pngitem.com/middle/hxxRRoo_music-notes-half-circle-hd-png-download/ \n' +  \
+                        '・使用BGM\n' +  \
+                        '→https://www.youtube.com/watch?v=XjxQew29tCc&t=0s'
         self.headline = tk.Label(text='作成情報', font=('', '40', 'bold'), foreground='black')
-        self.description = tk.Label(text=description, font=('', '25'), foreground='black', justify='left', wraplength=1250)
+        self.description = tk.Label(text=description, font=('', '25'), foreground='black', justify='left', wraplength=830)
         self.backtitle = tk.Button(self.m_wid, text = 'タイトルへ戻る', font=('', '30'), command=self.backtitle)
 
         #オブジェクト配置
         self.headline.place(x = 150, y = 150)
-        self.description.place(x = 150, y = 300)
+        self.description.place(x = 150, y = 240)
         self.backtitle.place(x = 50, y = 50)
 
     #シーン切り替えの際にHISTORY画面からボタンを消す
@@ -278,6 +377,7 @@ class Info():
         self.backtitle.destroy()
 
 
+#
 #-------------------------------------(def)
 
 #BPM算出関数 in WAIT
@@ -301,6 +401,21 @@ def getUmusic():
             break
     return Umusicindex
 
+#tkinterのウィンドウを最前面or最背面 in SoundPlayer, main.py
+def window(root, TF):
+    root.attributes("-topmost", TF)
+
+#音声再生 in main.py
+def SoundPlayer(root, path):
+    cmd = ['start', f'{path}']
+    subprocess.Popen(cmd, shell=True)
+    # root.lift()
+    window(root, True)
+
+#音声終了 in main.py
+def SoundKiller():
+    subprocess.call('taskkill /im wmplayer.exe')
+
 #RESULT画面でimpsをprint in RESULT
 def read_csv(i):
     # i = Umusicindex
@@ -314,7 +429,7 @@ def read_csv(i):
     Ulog6 = Ulog['6qui'].astype(str)
     global index_m, index_0, index_1, index_2, index_4, index_6
 
-    index_m =  f'パート\n  \
+    index_m =  f'範囲\n  \
                 {Ulogm_short.iloc[i]}\n  \
                 {Ulogm_short.iloc[i+1]}\n  \
                 {Ulogm_short.iloc[i+2]}\n  \
@@ -323,7 +438,7 @@ def read_csv(i):
                 {Ulogm_short.iloc[i+5]}\n  \
                 {Ulogm_short.iloc[i+6]}\n  \
                 {Ulogm_short.iloc[i+7]}'
-    index_m = index_m.replace(' ', '')                
+    index_m = index_m.replace(' ', '')
 
     index_0 =  f'軽\n  \
                 {Ulog0.iloc[i]}\n  \
@@ -334,7 +449,7 @@ def read_csv(i):
                 {Ulog0.iloc[i+5]}\n  \
                 {Ulog0.iloc[i+6]}\n  \
                 {Ulog0.iloc[i+7]}'
-    index_0 = index_0.replace(' ', '')
+    index_0 = index_0.replace(' ', '').replace('.0', '')
     
     index_1 =  f'清\n  \
                 {Ulog1.iloc[i]}\n  \
@@ -345,7 +460,7 @@ def read_csv(i):
                 {Ulog1.iloc[i+5]}\n  \
                 {Ulog1.iloc[i+6]}\n  \
                 {Ulog1.iloc[i+7]}'
-    index_1 = index_1.replace(' ', '')
+    index_1 = index_1.replace(' ', '').replace('.0', '')
 
     index_2 =  f'激\n  \
                 {Ulog2.iloc[i]}\n  \
@@ -356,7 +471,7 @@ def read_csv(i):
                 {Ulog2.iloc[i+5]}\n  \
                 {Ulog2.iloc[i+6]}\n  \
                 {Ulog2.iloc[i+7]}'
-    index_2 = index_2.replace(' ', '')
+    index_2 = index_2.replace(' ', '').replace('.0', '')
 
     index_4 =  f'哀\n  \
                 {Ulog4.iloc[i]}\n  \
@@ -367,7 +482,7 @@ def read_csv(i):
                 {Ulog4.iloc[i+5]}\n  \
                 {Ulog4.iloc[i+6]}\n  \
                 {Ulog4.iloc[i+7]}'
-    index_4 = index_4.replace(' ', '')
+    index_4 = index_4.replace(' ', '').replace('.0', '')
 
     index_6 =  f'安\n  \
                 {Ulog6.iloc[i]}\n  \
@@ -378,7 +493,7 @@ def read_csv(i):
                 {Ulog6.iloc[i+5]}\n  \
                 {Ulog6.iloc[i+6]}\n  \
                 {Ulog6.iloc[i+7]}'
-    index_6 = index_6.replace(' ', '')
+    index_6 = index_6.replace(' ', '').replace('.0', '')
 
     return index_m, index_0, index_1, index_2, index_4, index_6
 
@@ -405,9 +520,24 @@ def create_Udf(i):
 
     return Ulog_values
 
-#レーダーチャートをRESULT画面に表示 in main.py
-def RaderChart_show():
-    return RaderChart(impsdf)
+#変数pathの値を返すだけ in main.py
+def path_return():
+    return path
+
+#データフレームimpsdf_trueの値を返すだけ in main.py
+def impsdf_true_return():
+    return impsdf_true
+
+#実行結果を変数に保存(未)
+def save(mp3name, path, tempo, Umusicindex):
+    global mp3name_save, path_save, tempo_save, Umusicindex_save
+    mp3name_save = mp3name
+    path_save = path
+    tempo_save = tempo
+    Umusicindex_save = Umusicindex
+
+    return mp3name_save, path_save, tempo_save, Umusicindex_save
+
 
 
 print('----------------------------background end')
